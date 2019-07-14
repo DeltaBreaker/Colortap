@@ -21,23 +21,28 @@ public class InputRelayThread implements Runnable {
 	@Override
 	public void run() {
 		try {
+			// Set thread variables so that no change can be made after starting
 			control = new Robot();
 			delay = Long.parseLong(StartupColortap.window.pollDelay.getText());
 			inputs = StartupColortap.window.inputList.getInputList();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(StartupColortap.window, "Error trying to create thread!");
 			isRunning = false;
+			StartupColortap.window.start.setText("Start");
 		}
 		
 		while(isRunning) {
 			try {
+				// Screen capture
 				BufferedImage screen = control.createScreenCapture(new Rectangle(0, 0, (int) StartupColortap.screenSize.getWidth(), (int) StartupColortap.screenSize.getHeight()));
 				
+				// Cycle through inputs and detect any matches
 				for(PanelInput i : inputs) {
 					int color = screen.getRGB(i.input.getX(), i.input.getY());
 					int r = (color >> 16) & 0xFF;
 					int g = (color >> 8) & 0xFF;
 					int b = color & 0xFF;
+					
 					Color colorCheck = new Color(r, g, b);
 					if(colorMatches(colorCheck, i.input.getColor(), i.getSensitivity())) {
 						control.mouseMove(i.input.getX(), i.input.getY());

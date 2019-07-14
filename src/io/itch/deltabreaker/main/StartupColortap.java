@@ -32,6 +32,7 @@ public class StartupColortap {
 			System.exit(0);
 		}
 
+		// Create GUI
 		window = new WindowOverview();
 	}
 	

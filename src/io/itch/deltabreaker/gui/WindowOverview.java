@@ -14,6 +14,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 
 import io.itch.deltabreaker.automation.InputRelayThread;
+import io.itch.deltabreaker.main.FileHandler;
 import io.itch.deltabreaker.main.StartupColortap;
 
 public class WindowOverview extends JFrame {
@@ -26,12 +27,13 @@ public class WindowOverview extends JFrame {
 	public static final Color accent = new Color(40, 40, 40);
 
 	private JScrollPane scrollingInputList;
-	private JButton record;
-	public JButton start;
+	private JButton record, save, load;
 	private JLabel pollDelayLabel;
+	private JTextArea file;
 	
 	public InputRelayThread thread = new InputRelayThread();
 	public JTextArea pollDelay;
+	public JButton start;
 	public PanelInputList inputList;
 
 	public WindowOverview() {
@@ -39,7 +41,7 @@ public class WindowOverview extends JFrame {
 		thread.isRunning = false;
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(500, 500);
+		setSize(320, 500);
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setLayout(null);
@@ -89,11 +91,38 @@ public class WindowOverview extends JFrame {
 			}
 		});
 		
+		file = new JTextArea("filename.clt");
+		file.setBounds(210, 103, 100, 20);
+		file.setBorder(border);
+		
+		save = new JButton("Save");
+		save.setBounds(210, 128, 100, 20);
+		save.setFocusPainted(false);
+		save.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FileHandler.save(file.getText());
+			}
+		});
+		
+		load = new JButton("Load");
+		load.setBounds(210, 153, 100, 20);
+		load.setFocusPainted(false);
+		load.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FileHandler.load(file.getText());
+			}
+		});
+		
 		add(scrollingInputList);
 		add(record);
 		add(pollDelayLabel);
 		add(pollDelay);
 		add(start);
+		add(file);
+		add(save);
+		add(load);
 		
 		setVisible(true);
 	}

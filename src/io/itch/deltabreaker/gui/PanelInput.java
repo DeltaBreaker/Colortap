@@ -22,6 +22,7 @@ public class PanelInput extends JPanel {
 	private static final int height = 82;
 
 	public ColorConditionalInput input;
+	
 	private JLabel sensitivityLabel;
 	private JTextArea sensitivityInput;
 	private JButton remove;
@@ -35,6 +36,7 @@ public class PanelInput extends JPanel {
 		setBorder(border);
 		setSize(width, height);
 
+		// Component setup
 		remove = new JButton("Remove");
 		remove.setBounds(71, 4, 100, 20);
 		remove.setFocusPainted(false);
@@ -61,6 +63,7 @@ public class PanelInput extends JPanel {
 
 	@Override
 	public void paintComponent(Graphics g) {
+		// Override paint method for custom display
 		super.paintComponent(g);
 		g.clearRect(0, 0, getWidth(), getHeight());
 

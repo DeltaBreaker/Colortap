@@ -38,6 +38,7 @@ public class PanelInputList extends JPanel {
 	}
 	
 	public void removeInput(PanelInput input) {
+		// Updates component list after removing an input
 		if(inputList.contains(input)) {
 			inputList.remove(input);
 			removeAll();
@@ -45,10 +46,18 @@ public class PanelInputList extends JPanel {
 				inputList.get(i).setLocation(5, 5 + i * 87);
 				add(inputList.get(i));
 			}
+			
 			setSize(185, 5 + inputList.size() * 87);
 			setPreferredSize(new Dimension(getSize()));
 			repaint();
 		}
+	}
+	
+	public void clearInputList() {
+		inputList.clear();
+		removeAll();
+		setSize(0, 0);
+		setPreferredSize(new Dimension(getSize()));
 	}
 	
 }

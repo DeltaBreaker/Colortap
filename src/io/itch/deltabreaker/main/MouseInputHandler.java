@@ -22,6 +22,7 @@ public class MouseInputHandler implements NativeMouseInputListener {
 
 	public MouseInputHandler() {
 		try {
+			// Set up screen capture
 			colorCapture = new Robot();
 		} catch (AWTException e) {
 			e.printStackTrace();
@@ -41,6 +42,7 @@ public class MouseInputHandler implements NativeMouseInputListener {
 
 	@Override
 	public void nativeMouseReleased(NativeMouseEvent nativeEvent) {
+		// Add input to list when capturing (middle click)
 		if (nativeEvent.getButton() == NativeMouseEvent.BUTTON3) {
 			if (isCapturingInput) {
 				try {
@@ -53,8 +55,6 @@ public class MouseInputHandler implements NativeMouseInputListener {
 					int r = (color >> 16) & 0xFF;
 					int g = (color >> 8) & 0xFF;
 					int b = color & 0xFF;
-
-					System.out.println(color);
 					
 					// Add input to list with color at mouse location
 					StartupColortap.window.inputList.addInput(new PanelInput(StartupColortap.window.inputList,
@@ -65,10 +65,13 @@ public class MouseInputHandler implements NativeMouseInputListener {
 				}
 			}
 		}
+		
+		// Hot key to stop play-back thread (right click)
 		if (nativeEvent.getButton() == NativeMouseEvent.BUTTON2) {
 			if(StartupColortap.window.thread.isRunning) {
 				StartupColortap.window.thread.isRunning = false;
 				StartupColortap.window.start.setText("Start");
+				JOptionPane.showMessageDialog(StartupColortap.window, "Input playback has ended.");
 			}
 		}
 	}
