@@ -5,6 +5,7 @@ This program works best when used in an environment that is constantly visually 
 If you find an issue with the prorgam, post it at https://github.com/DeltaBreaker/Colortap/issues
 
 Note:
+
 	Make sure that Windows' scaling is set to 100%
 	Right click desktop > Display settings > Scale and layout
 
