@@ -2,8 +2,12 @@ package io.itch.deltabreaker.main;
 
 import java.awt.AWTException;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JOptionPane;
@@ -16,14 +20,16 @@ import io.itch.deltabreaker.gui.PanelInput;
 
 public class MouseInputHandler implements NativeMouseInputListener {
 
-	private Robot colorCapture;
+	private Robot control;
 
 	public boolean isCapturingInput = false;
+	public double scalingFactor;
 
 	public MouseInputHandler() {
 		try {
 			// Set up screen capture
-			colorCapture = new Robot();
+			control = new Robot();
+			System.out.println("[MouseInputHandler]: Created screen capture robot");
 		} catch (AWTException e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -37,7 +43,10 @@ public class MouseInputHandler implements NativeMouseInputListener {
 
 	@Override
 	public void nativeMousePressed(NativeMouseEvent nativeEvent) {
-
+		if (scalingFactor == -1 && nativeEvent.getButton() == NativeMouseEvent.BUTTON3) {
+			scalingFactor = Math.round(calculateScalingFactor(nativeEvent.getPoint()) * 100.0) / 100.0;
+			System.out.println("[MouseInputHandler]: Scaling factor is set to " + scalingFactor);
+		}
 	}
 
 	@Override
@@ -47,31 +56,34 @@ public class MouseInputHandler implements NativeMouseInputListener {
 			if (isCapturingInput) {
 				try {
 					// Take a screenshot
-					BufferedImage screen = colorCapture.createScreenCapture(new Rectangle(0, 0,
-							(int) StartupColortap.screenSize.getWidth(), (int) StartupColortap.screenSize.getHeight()));
-				    
+					BufferedImage screen = control.createScreenCapture(
+							new Rectangle(0, 0, (int) (StartupColortap.screenSize.getWidth() * scalingFactor),
+									(int) (StartupColortap.screenSize.getHeight() * scalingFactor)));
+
 					// Get color values
 					int color = screen.getRGB(nativeEvent.getX(), nativeEvent.getY());
 					int r = (color >> 16) & 0xFF;
 					int g = (color >> 8) & 0xFF;
 					int b = color & 0xFF;
-					
+
 					// Add input to list with color at mouse location
 					StartupColortap.window.inputList.addInput(new PanelInput(StartupColortap.window.inputList,
-							new ColorConditionalInput(new Color(r, g, b), nativeEvent.getPoint())));
+							new ColorConditionalInput(new Color(r, g, b), new Point((int) (nativeEvent.getX()), (int) (nativeEvent.getY())))));
+					System.out.println("[MouseInputHandler]: Input added at " + nativeEvent.getX() + "x "
+							+ nativeEvent.getY() + "y with color " + r + " " + g + " " + b);
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(StartupColortap.window, "The mouse may be outside of the main screen"
-							+ "\nor the windows scaling factor may not be set to 100%!");
+					JOptionPane.showMessageDialog(StartupColortap.window, "The mouse might be outside of the main screen");
 				}
 			}
 		}
-		
+
 		// Hot key to stop play-back thread (right click)
 		if (nativeEvent.getButton() == NativeMouseEvent.BUTTON2) {
-			if(StartupColortap.window.thread.isRunning) {
+			if (StartupColortap.window.thread.isRunning) {
 				StartupColortap.window.thread.isRunning = false;
 				StartupColortap.window.start.setText("Start");
 				JOptionPane.showMessageDialog(StartupColortap.window, "Input playback has ended.");
+				System.out.println("[MouseInputHandler]: Input thread stopped");
 			}
 		}
 	}
@@ -84,6 +96,21 @@ public class MouseInputHandler implements NativeMouseInputListener {
 	@Override
 	public void nativeMouseMoved(NativeMouseEvent nativeEvent) {
 
+	}
+
+	public void setScalingFactor() {
+		// Sets up calculating the scaling factor to adjust finputs
+		scalingFactor = -1;
+		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+		control.mouseMove((int) screen.getWidth() / 2, (int) screen.getHeight() / 2);
+		control.mousePress(InputEvent.BUTTON2_DOWN_MASK);
+		control.mouseRelease(InputEvent.BUTTON2_DOWN_MASK);
+	}
+
+	private double calculateScalingFactor(Point point) {
+		double x = point.getX() / (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2);
+		double y = point.getY() / (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2);
+		return (x + y) / 2.0;
 	}
 
 }

@@ -28,11 +28,11 @@ public class WindowOverview extends JFrame {
 
 	private JScrollPane scrollingInputList;
 	private JButton record, save, load;
-	private JLabel pollDelayLabel;
+	private JLabel pollDelayLabel, clickDeviationLabel;
 	private JTextArea file;
 	
 	public InputRelayThread thread = new InputRelayThread();
-	public JTextArea pollDelay;
+	public JTextArea pollDelay, clickDeviation;
 	public JButton start;
 	public PanelInputList inputList;
 
@@ -74,8 +74,15 @@ public class WindowOverview extends JFrame {
 		pollDelay.setBounds(210, 55, 100, 18);
 		pollDelay.setBorder(border);
 		
+		clickDeviationLabel = new JLabel("Click Deviation");
+		clickDeviationLabel.setBounds(210, 75, 100, 20);
+		
+		clickDeviation = new JTextArea("10");
+		clickDeviation.setBounds(210, 98, 100, 18);
+		clickDeviation.setBorder(border);
+		
 		start = new JButton("Start");
-		start.setBounds(210, 78, 100, 20);
+		start.setBounds(210, 121, 100, 20);
 		start.setFocusPainted(false);
 		start.addActionListener(new ActionListener() {
 			@Override
@@ -92,11 +99,11 @@ public class WindowOverview extends JFrame {
 		});
 		
 		file = new JTextArea("filename.clt");
-		file.setBounds(210, 103, 100, 20);
+		file.setBounds(210, 146, 100, 20);
 		file.setBorder(border);
 		
 		save = new JButton("Save");
-		save.setBounds(210, 128, 100, 20);
+		save.setBounds(210, 171, 100, 20);
 		save.setFocusPainted(false);
 		save.addActionListener(new ActionListener() {
 			@Override
@@ -106,7 +113,7 @@ public class WindowOverview extends JFrame {
 		});
 		
 		load = new JButton("Load");
-		load.setBounds(210, 153, 100, 20);
+		load.setBounds(210, 196, 100, 20);
 		load.setFocusPainted(false);
 		load.addActionListener(new ActionListener() {
 			@Override
@@ -119,12 +126,15 @@ public class WindowOverview extends JFrame {
 		add(record);
 		add(pollDelayLabel);
 		add(pollDelay);
+		add(clickDeviationLabel);
+		add(clickDeviation);
 		add(start);
 		add(file);
 		add(save);
 		add(load);
 		
 		setVisible(true);
+		System.out.println("[WindowOverview]: Main window created");
 	}
 
 }

@@ -18,9 +18,10 @@ public class FileHandler {
 	public static void load(String file) {
 		File load = new File("data/" + file);
 		if (load.exists()) {
-			StartupColortap.window.inputList.clearInputList();
 			try {
 				ObjectInputStream in = new ObjectInputStream(new FileInputStream(load));
+
+				StartupColortap.window.inputList.clearInputList();
 				
 				int length = in.readInt();
 				for (int i = 0; i < length; i++) {
@@ -31,11 +32,13 @@ public class FileHandler {
 
 				in.close();
 				JOptionPane.showMessageDialog(StartupColortap.window, file + " was loaded successfully.");
+				System.out.println("[FileHandler]: File " + file + " loaded");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
 			JOptionPane.showMessageDialog(StartupColortap.window, "That file does not exist!");
+			System.out.println("[FileHandler]: File " + file + " not found");
 		}
 	}
 
@@ -61,6 +64,7 @@ public class FileHandler {
 			out.flush();
 			out.close();
 			JOptionPane.showMessageDialog(StartupColortap.window, file + " was saved successfully.");
+			System.out.println("[FileHandler]: File " + file + " saved");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
