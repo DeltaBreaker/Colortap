@@ -43,6 +43,7 @@ public class MouseInputHandler implements NativeMouseInputListener {
 
 	@Override
 	public void nativeMousePressed(NativeMouseEvent nativeEvent) {
+		// Only used to first determine the scaling factor
 		if (scalingFactor == -1 && nativeEvent.getButton() == NativeMouseEvent.BUTTON3) {
 			scalingFactor = Math.round(calculateScalingFactor(nativeEvent.getPoint()) * 100.0) / 100.0;
 			System.out.println("[MouseInputHandler]: Scaling factor is set to " + scalingFactor);
@@ -68,11 +69,13 @@ public class MouseInputHandler implements NativeMouseInputListener {
 
 					// Add input to list with color at mouse location
 					StartupColortap.window.inputList.addInput(new PanelInput(StartupColortap.window.inputList,
-							new ColorConditionalInput(new Color(r, g, b), new Point((int) (nativeEvent.getX()), (int) (nativeEvent.getY())))));
+							new ColorConditionalInput(new Color(r, g, b),
+									new Point((int) (nativeEvent.getX()), (int) (nativeEvent.getY())))));
 					System.out.println("[MouseInputHandler]: Input added at " + nativeEvent.getX() + "x "
 							+ nativeEvent.getY() + "y with color " + r + " " + g + " " + b);
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(StartupColortap.window, "The mouse might be outside of the main screen");
+					JOptionPane.showMessageDialog(StartupColortap.window,
+							"The mouse might be outside of the main screen");
 				}
 			}
 		}
@@ -99,7 +102,7 @@ public class MouseInputHandler implements NativeMouseInputListener {
 	}
 
 	public void setScalingFactor() {
-		// Sets up calculating the scaling factor to adjust finputs
+		// Sets up calculating the scaling factor to adjust inputs
 		scalingFactor = -1;
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 		control.mouseMove((int) screen.getWidth() / 2, (int) screen.getHeight() / 2);
@@ -108,6 +111,12 @@ public class MouseInputHandler implements NativeMouseInputListener {
 	}
 
 	private double calculateScalingFactor(Point point) {
+		// Returns scaling factor based off of the fact that Robot and Toolkit respond to
+		// coordinates differently than the global input handler does
+		
+		// If we tell the Robot to click at a specific point and then cross reference
+		// that point with what the global input handler returns, we can determine what
+		// the scaling is set to
 		double x = point.getX() / (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2);
 		double y = point.getY() / (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2);
 		return (x + y) / 2.0;

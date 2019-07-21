@@ -34,6 +34,8 @@ public class StartupColortap {
 			// Create GUI
 			window = new WindowOverview();
 			JOptionPane.showMessageDialog(window, "Checking Windows scaling factor.\nDon't move your mouse.");
+			
+			// Determine Windows scaling factor
 			globalMouseInput.setScalingFactor();
 			JOptionPane.showMessageDialog(window, "Scaling set to " + globalMouseInput.scalingFactor);
 		} catch (Exception e) {
