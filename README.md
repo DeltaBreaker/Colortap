@@ -5,9 +5,11 @@ This program works best when used in an environment that is constantly visually 
 If you find an issue with the prorgam, post it at https://github.com/DeltaBreaker/Colortap/issues
 
 Note:
+
 	Requires Java 8 min.
 
 For ADB mode:
+
 	Make sure the Android sdk is installed
 
 	The program will check in C:\Users\'user'\AppData\Local\Android\Sdk\platform-tools for adb.exe
@@ -19,6 +21,6 @@ For ADB mode:
 Controls:
 
 For Desktop mode:
-	Stop input playback: Right click (anywhere)
 
+	Stop input playback: Right click (anywhere)
 	Add input to list: Middle click
