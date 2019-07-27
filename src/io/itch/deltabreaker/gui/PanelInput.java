@@ -43,7 +43,7 @@ public class PanelInput extends JPanel {
 		remove.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!StartupColortap.window.thread.isRunning) {
+				if (!StartupColortap.window.thread.isRunning && !WindowADBPreview.running) {
 					parentList.removeInput(self_identifier);
 				}
 			}

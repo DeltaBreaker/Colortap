@@ -7,5 +7,6 @@
 			<attribute name="javadoc_location" value="file:/C:/Users/willc/git/Colortap/lib/doc/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/jar/jadb-v1.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

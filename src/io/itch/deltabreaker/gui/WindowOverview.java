@@ -30,7 +30,7 @@ public class WindowOverview extends JFrame {
 	private JButton record, save, load;
 	private JLabel pollDelayLabel, clickDeviationLabel;
 	private JTextArea file;
-	
+
 	public InputRelayThread thread = new InputRelayThread();
 	public JTextArea pollDelay, clickDeviation;
 	public JButton start;
@@ -58,50 +58,71 @@ public class WindowOverview extends JFrame {
 		record.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				StartupColortap.globalMouseInput.isCapturingInput = !StartupColortap.globalMouseInput.isCapturingInput;
-				if (!StartupColortap.globalMouseInput.isCapturingInput) {
-					record.setText("Record");
+				if (StartupColortap.mode == 0) {
+					StartupColortap.globalMouseInput.isCapturingInput = !StartupColortap.globalMouseInput.isCapturingInput;
+					if (!StartupColortap.globalMouseInput.isCapturingInput) {
+						record.setText("Record");
+					} else {
+						record.setText("Stop");
+					}
 				} else {
-					record.setText("Stop");
+					WindowADBPreview.isCapturingInput = !WindowADBPreview.isCapturingInput;
+					if (!WindowADBPreview.isCapturingInput) {
+						record.setText("Record");
+					} else {
+						record.setText("Stop");
+					}
 				}
 			}
 		});
 
 		pollDelayLabel = new JLabel("Polling Delay (ms)");
 		pollDelayLabel.setBounds(210, 30, 110, 20);
-		
+
 		pollDelay = new JTextArea("250");
 		pollDelay.setBounds(210, 55, 100, 18);
 		pollDelay.setBorder(border);
-		
+
 		clickDeviationLabel = new JLabel("Click Deviation");
 		clickDeviationLabel.setBounds(210, 75, 100, 20);
-		
+
 		clickDeviation = new JTextArea("10");
 		clickDeviation.setBounds(210, 98, 100, 18);
 		clickDeviation.setBorder(border);
-		
+
 		start = new JButton("Start");
 		start.setBounds(210, 121, 100, 20);
 		start.setFocusPainted(false);
 		start.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(thread.isRunning) {
-					thread.isRunning = false;
-					start.setText("Start");
+				if (StartupColortap.mode == 0) {
+					if (thread.isRunning) {
+						thread.isRunning = false;
+						start.setText("Start");
+					} else {
+						thread = new InputRelayThread();
+						new Thread(thread).start();
+						start.setText("Stop");
+					}
 				} else {
-					thread = new InputRelayThread();
-					new Thread(thread).start();
-					start.setText("Stop");
+					if (WindowADBPreview.running) {
+						WindowADBPreview.running = false;
+						start.setText("Start");
+					} else {
+						WindowADBPreview.running = true;
+						record.setText("Record");
+						WindowADBPreview.isCapturingInput = false;
+						start.setText("Stop");
+					}
 				}
 			}
 		});
-		
+
 		file = new JTextArea("filename.clt");
 		file.setBounds(210, 146, 100, 20);
 		file.setBorder(border);
-		
+
 		save = new JButton("Save");
 		save.setBounds(210, 171, 100, 20);
 		save.setFocusPainted(false);
@@ -111,7 +132,7 @@ public class WindowOverview extends JFrame {
 				FileHandler.save(file.getText());
 			}
 		});
-		
+
 		load = new JButton("Load");
 		load.setBounds(210, 196, 100, 20);
 		load.setFocusPainted(false);
@@ -121,7 +142,7 @@ public class WindowOverview extends JFrame {
 				FileHandler.load(file.getText());
 			}
 		});
-		
+
 		add(scrollingInputList);
 		add(record);
 		add(pollDelayLabel);
@@ -132,7 +153,7 @@ public class WindowOverview extends JFrame {
 		add(file);
 		add(save);
 		add(load);
-		
+
 		setVisible(true);
 		System.out.println("[WindowOverview]: Main window created");
 	}
